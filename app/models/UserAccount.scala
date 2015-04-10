@@ -1,14 +1,17 @@
 package models
 
-import play.api.libs.json._
-import reactivemongo.bson.{BSONDocumentWriter, BSONDocument, BSONDocumentReader, BSONObjectID}
+import reactivemongo.bson.BSONObjectID
+
 
 /**
  * Created by anders on 09/04/15.
  */
-case class UserAccount(name: String, pw: String, id: BSONObjectID = BSONObjectID.generate)
+case class UserAccount(_id: String, name: String, pw: String)
 
 object UserAccount {
+  def apply(name: String, pw: String): UserAccount = {
+    new UserAccount(BSONObjectID.generate.stringify, name, pw)
+  }
 
   //  implicit val reader = UserAccountReader
   //  implicit val writer = UserAccountWriter
@@ -32,17 +35,17 @@ object UserAccount {
   //      )
   //  }
 
-//  implicit object UserWrites extends Writes[UserAccount] {
-//    override def writes(u: UserAccount): JsValue = Json.obj(
-//      "_id" -> JsString(u.id.toString()),
-//      "name" -> JsString(u.name),
-//      "pw" -> JsString(u.pw)
-//    )
-//  }
-//
-//  implicit object UserReads extends Reads[UserAccount] {
-//    override def reads(json: JsValue): JsResult[UserAccount] =
-//
-//  }
+  //  implicit object UserWrites extends Writes[UserAccount] {
+  //    override def writes(u: UserAccount): JsValue = Json.obj(
+  //      "_id" -> JsString(u.id.toString()),
+  //      "name" -> JsString(u.name),
+  //      "pw" -> JsString(u.pw)
+  //    )
+  //  }
+  //
+  //  implicit object UserReads extends Reads[UserAccount] {
+  //    override def reads(json: JsValue): JsResult[UserAccount] =
+  //
+  //  }
 
 }

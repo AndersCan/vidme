@@ -4,10 +4,11 @@ import models.UserAccount
 import play.api.libs.json.{JsValue, Json}
 import play.modules.reactivemongo.json.collection.JSONCollection
 import reactivemongo.api.{Cursor, MongoDriver}
-import reactivemongo.bson.BSONObjectID
+import reactivemongo.bson.{BSONDocument, BSONObjectID}
 import reactivemongo.core.commands.LastError
 
 import scala.concurrent.Future
+import scala.util.{Success, Failure}
 
 
 // TODO - Create explisit Execution context
@@ -46,11 +47,13 @@ class MongoDBImpl(val dbName: String, val colName: String) extends DataStorage {
     val futurePersonsList: Future[List[JsValue]] = cursor.collect[List]()
 
     val futureUserAccount: Future[List[UserAccount]] = futurePersonsList.map(usrlist => {
-      usrlist map (usr => new UserAccount
-      ((usr \ "name").toString(),
-          (usr \ "pw").toString(),
-          BSONObjectID((usr \ "_id" \ "$oid").toString().drop(1).dropRight(1))
-        ))
+      usrlist map (usr => {
+        println("FOUND: " + (usr \ "_id").toString())
+        new UserAccount((usr \ "_id").toString(),
+          (usr \ "name").toString(),
+          (usr \ "pw").toString()
+        )
+      })
     })
     futureUserAccount
   }
@@ -62,6 +65,7 @@ class MongoDBImpl(val dbName: String, val colName: String) extends DataStorage {
    */
   override def save(user: UserAccount): Future[LastError] = {
     val json = Json.obj(
+      "_id" -> BSONObjectID.generate.stringify,
       "name" -> user.name,
       "pw" -> user.pw
     )
@@ -76,4 +80,29 @@ class MongoDBImpl(val dbName: String, val colName: String) extends DataStorage {
    * @return the found user
    */
   override def exists(user: UserAccount): Future[Option[UserAccount]] = ???
+
+  /**
+   * Deletes the user details from the database
+   * @param user
+   * @return
+   */
+  override def delete(user: UserAccount): Future[Boolean] = {
+    delete(user._id)
+  }
+
+  /**
+   * Deletes the user details from the database
+   * @param userId BSONObjectID of user to delete
+   * @return Future[true] if successful
+   */
+  override def delete(userId: String): Future[Boolean] = {
+    println("delete user: " + Json.obj("_id" -> userId))
+    val futureRemove = collection.remove(Json.obj("id" -> userId))
+    futureRemove map (lastError => {
+
+      println(lastError.ok)
+      println(lastError.message)
+      lastError.ok
+    })
+  }
 }

@@ -1,6 +1,7 @@
 package database
 
 import models.UserAccount
+import reactivemongo.bson.BSONObjectID
 
 import scala.concurrent.Future
 
@@ -28,4 +29,18 @@ trait DataStorage {
    * @return
    */
   def save(user: UserAccount): Future[Any]
+
+  /**
+   * Deletes the user details from the database
+   * @param user
+   * @return
+   */
+  def delete(user: UserAccount): Future[Boolean]
+
+  /**
+   * Deletes the user details from the database
+   * @param userId BSONObjectID of user to delete
+   * @return Future[true] if successful
+   */
+  def delete(userId: String): Future[Boolean]
 }
