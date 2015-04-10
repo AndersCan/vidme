@@ -1,6 +1,6 @@
 package models
 
-import reactivemongo.bson.BSONObjectID
+import play.api.libs.json.{JsObject, Json}
 
 
 /**
@@ -9,6 +9,13 @@ import reactivemongo.bson.BSONObjectID
 case class UserAccount(name: String, pw: String)
 
 object UserAccount {
+  def getJson(ua: UserAccount): JsObject = {
+    Json.obj(
+      "name" -> ua.name,
+      "pw" -> ua.pw
+    )
+  }
+
   //  def apply(name: String, pw: String): UserAccount = {
   //    new UserAccount(name, pw)
   //  }

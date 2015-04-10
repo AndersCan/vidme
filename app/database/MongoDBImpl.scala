@@ -60,33 +60,46 @@ class MongoDBImpl(val dbName: String, val colName: String) extends DataStorage {
   /**
    * Saves the user details to the database
    * @param user
-   * @return
+   * @return lastError
    */
   override def save(user: UserAccount): Future[LastError] = {
     val json = Json.obj(
-      "_id" -> BSONObjectID.generate.stringify,
+      //      "_id" -> BSONObjectID.generate.stringify,
       "name" -> user.name,
       "pw" -> user.pw
     )
+
     collection.insert(json).map(lastError => {
       lastError
     })
   }
 
   /**
-   * checks if the given user exists.
-   * @param user user with values to match
-   * @return the found user
+   * Updates the given user with new details to the database
+   * @param oldUser old user
+   * @param updatedUser updated users
+   * @return lastError
    */
-  override def exists(user: UserAccount): Future[Option[UserAccount]] = ???
+  override def update(oldUser: UserAccount, updatedUser: UserAccount): Future[LastError] = {
+    val selector = UserAccount.getJson(oldUser)
+
+    val modifier = Json.obj(
+      "$set" -> UserAccount.getJson(updatedUser)
+    )
+    println(selector)
+    println(modifier)
+    // get a future update
+    val futureUpdate = collection.update(selector, modifier)
+    futureUpdate
+  }
 
   /**
    * Deletes the user details from the database
    * @param user UserAccount of user to delete
    * @return Future[true] if command was executed without errors.
    */
-  override def delete(user: UserAccount, count: Int = 1): Future[Boolean] = {
+  override def delete(user: UserAccount, count: Int = 1): Future[LastError] = {
     val futureRemove = collection.remove(Json.obj("name" -> user.name, "pw" -> user.pw))
-    futureRemove map (_.ok)
+    futureRemove
   }
 }

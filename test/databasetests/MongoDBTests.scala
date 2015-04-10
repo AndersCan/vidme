@@ -19,13 +19,14 @@ class MongoDBTests extends FlatSpec with Matchers with ScalaFutures {
   val m: MongoDBImpl = new MongoDBImpl("TEST", "TEST")
   val un: String = "USERNAME"
   val pw: String = "PASSWORD"
+  val defaultUser = UserAccount(un, pw)
 
   "The MongoDBImpl " must "be able to save a User" in {
-    m.save(UserAccount(un, pw))
+    m.save(defaultUser)
   }
 
   it must "find the user that has been saved" in {
-    val found = m.find(UserAccount(un, pw))
+    val found = m.find(defaultUser)
 
     whenReady(found)(list => list.foreach {
       ua => {
@@ -35,7 +36,7 @@ class MongoDBTests extends FlatSpec with Matchers with ScalaFutures {
   }
 
   it must "saved user has correct values" in {
-    val found = m.find(UserAccount(un, pw))
+    val found = m.find(defaultUser)
 
     val futList: Future[List[Boolean]] = found.map(users =>
       users.map(user => {
@@ -52,7 +53,7 @@ class MongoDBTests extends FlatSpec with Matchers with ScalaFutures {
     val tobeDeleted = UserAccount("deleteName", "deletePassword")
     whenReady(m.save(tobeDeleted))(res => {
       whenReady(m.delete(tobeDeleted))(res => {
-        assert(res)
+        assert(res.ok)
       })
     })
   }
@@ -60,6 +61,24 @@ class MongoDBTests extends FlatSpec with Matchers with ScalaFutures {
     val found = m.find(UserAccount("deleteName", "deletePassword"))
     whenReady(found)(list => assert(list.isEmpty))
   }
+
+  it must "update a user with new values" in {
+    val update = UserAccount("newname", "newpassword")
+    val futUpdate = m.update(defaultUser, update)
+
+    whenReady(futUpdate)(lastError => {
+      assert(lastError.ok)
+      val find = m.find(update)
+      whenReady(find)(users => {
+        assert(users.nonEmpty)
+        users.foreach(u => {
+          println("HELLO>!")
+          assert(u.name == "\"newname\"" && u.pw == "\"newpassword\"")
+        })
+      })
+    })
+  }
+
   //  it must "must return empty list when no document exist" in {
   //    val found = m.find(new UserAccount("THISDOESNOTEXIST", "ITREALLYDOESN'T"))
   //

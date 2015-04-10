@@ -17,13 +17,6 @@ trait DataStorage {
   def find(user: UserAccount): Future[List[UserAccount]]
 
   /**
-   * checks if the given user exists.
-   * @param user user with values to match
-   * @return the found user
-   */
-  def exists(user: UserAccount): Future[Option[UserAccount]]
-
-  /**
    * Saves the user details to the database
    * @param user
    * @return
@@ -31,10 +24,18 @@ trait DataStorage {
   def save(user: UserAccount): Future[Any]
 
   /**
+   * Updates the given user with new details to the database
+   * @param oldUser old user
+   * @param updatedUser updated users
+   * @return
+   */
+  def update(oldUser: UserAccount, updatedUser: UserAccount): Future[Any]
+
+  /**
    * Deletes the user details from the database
    * @param user to delete
    * @param count how many to delete
    * @return Boolean if command was successful, not if delete was performed
    */
-  def delete(user: UserAccount, count: Int): Future[Boolean]
+  def delete(user: UserAccount, count: Int): Future[Any]
 }
