@@ -9,11 +9,9 @@ import models.UserAccount
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FlatSpec, Matchers}
 
-import scala.concurrent.{Future, Await}
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.language.postfixOps
-import scala.concurrent.duration._
-import scala.util.{Failure, Success}
 
 class MongoDBTests extends FlatSpec with Matchers with ScalaFutures {
   val m: MongoDBImpl = new MongoDBImpl("TEST", "TEST")
@@ -72,39 +70,9 @@ class MongoDBTests extends FlatSpec with Matchers with ScalaFutures {
       whenReady(find)(users => {
         assert(users.nonEmpty)
         users.foreach(u => {
-          println("HELLO>!")
           assert(u.name == "\"newname\"" && u.pw == "\"newpassword\"")
         })
       })
     })
   }
-
-  //  it must "must return empty list when no document exist" in {
-  //    val found = m.find(new UserAccount("THISDOESNOTEXIST", "ITREALLYDOESN'T"))
-  //
-  //    val futBool: Future[Boolean] = found.map(users => {
-  //      println(s"Here: $users")
-  //      users.isEmpty
-  //    }
-  //    )
-  //
-  //    futBool.onComplete({
-  //      case Success(b) => assert(true)
-  //      case _ => assert(false)
-  //    })
-  //  }
-
-  //
-  //    val found2 = m.find(new UserAccount("name", "password"))
-  //    val usr = Await.ready(found2, 10 seconds)
-  //
-  //    val result = usr.map(oua => {
-  //      val x = oua.get
-  //      println("This is the type: " + x)
-  //    }) match {
-  //      case _ => true
-  //      case _ => false
-  //    }
-  //    assert(result)
-  //  }
 }

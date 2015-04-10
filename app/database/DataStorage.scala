@@ -1,7 +1,6 @@
 package database
 
 import models.UserAccount
-import reactivemongo.bson.BSONObjectID
 
 import scala.concurrent.Future
 
