@@ -51,7 +51,7 @@ class MongoDBTests extends FlatSpec with Matchers with ScalaFutures {
   it must "delete user returns true" in {
     val tobeDeleted = UserAccount("deleteName", "deletePassword")
     whenReady(m.save(tobeDeleted))(res => {
-      whenReady(m.delete(tobeDeleted._id))(res => {
+      whenReady(m.delete(tobeDeleted))(res => {
         assert(res)
       })
     })

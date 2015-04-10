@@ -48,8 +48,7 @@ class MongoDBImpl(val dbName: String, val colName: String) extends DataStorage {
 
     val futureUserAccount: Future[List[UserAccount]] = futurePersonsList.map(usrlist => {
       usrlist map (usr => {
-        println("FOUND: " + (usr \ "_id").toString())
-        new UserAccount((usr \ "_id").toString(),
+        new UserAccount(
           (usr \ "name").toString(),
           (usr \ "pw").toString()
         )
@@ -83,26 +82,11 @@ class MongoDBImpl(val dbName: String, val colName: String) extends DataStorage {
 
   /**
    * Deletes the user details from the database
-   * @param user
-   * @return
+   * @param user UserAccount of user to delete
+   * @return Future[true] if command was executed without errors.
    */
-  override def delete(user: UserAccount): Future[Boolean] = {
-    delete(user._id)
-  }
-
-  /**
-   * Deletes the user details from the database
-   * @param userId BSONObjectID of user to delete
-   * @return Future[true] if successful
-   */
-  override def delete(userId: String): Future[Boolean] = {
-    println("delete user: " + Json.obj("_id" -> userId))
-    val futureRemove = collection.remove(Json.obj("id" -> userId))
-    futureRemove map (lastError => {
-
-      println(lastError.ok)
-      println(lastError.message)
-      lastError.ok
-    })
+  override def delete(user: UserAccount, count: Int = 1): Future[Boolean] = {
+    val futureRemove = collection.remove(Json.obj("name" -> user.name, "pw" -> user.pw))
+    futureRemove map (_.ok)
   }
 }

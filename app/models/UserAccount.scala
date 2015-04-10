@@ -6,12 +6,12 @@ import reactivemongo.bson.BSONObjectID
 /**
  * Created by anders on 09/04/15.
  */
-case class UserAccount(_id: String, name: String, pw: String)
+case class UserAccount(name: String, pw: String)
 
 object UserAccount {
-  def apply(name: String, pw: String): UserAccount = {
-    new UserAccount(BSONObjectID.generate.stringify, name, pw)
-  }
+  //  def apply(name: String, pw: String): UserAccount = {
+  //    new UserAccount(name, pw)
+  //  }
 
   //  implicit val reader = UserAccountReader
   //  implicit val writer = UserAccountWriter

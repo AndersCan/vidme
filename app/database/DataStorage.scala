@@ -32,15 +32,9 @@ trait DataStorage {
 
   /**
    * Deletes the user details from the database
-   * @param user
-   * @return
+   * @param user to delete
+   * @param count how many to delete
+   * @return Boolean if command was successful, not if delete was performed
    */
-  def delete(user: UserAccount): Future[Boolean]
-
-  /**
-   * Deletes the user details from the database
-   * @param userId BSONObjectID of user to delete
-   * @return Future[true] if successful
-   */
-  def delete(userId: String): Future[Boolean]
+  def delete(user: UserAccount, count: Int): Future[Boolean]
 }
