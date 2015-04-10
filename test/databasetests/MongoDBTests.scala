@@ -8,21 +8,37 @@ import database.MongoDBImpl
 import models.UserAccount
 import org.scalatest.{FlatSpec, Matchers}
 
+import scala.concurrent.{Future, Await}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.language.postfixOps
+import scala.concurrent.duration._
 
 class MongoDBTests extends FlatSpec with Matchers {
   val m: MongoDBImpl = new MongoDBImpl("TEST", "TEST")
 
   "The MongoDBImpl " must "be able to save a User" in {
-    m.save(new UserAccount("name", "password"))
+    m.save(new UserAccount("OKAYNAME", "PASSWORD"))
   }
   it must "find the user that has been saved" in {
-    val found = m.find(new UserAccount("name", "password"))
-    found.map(usrs =>
-      assert(usrs.head.name == "name" && usrs.head.pw == "pw")
+    val found = m.find(new UserAccount("OKAYNAME", "PASSWORD"))
+
+    val flist: Future[List[Boolean]] = found.map(usrs =>
+      usrs.map(user => {
+        println(s"USER: $user")
+        user.name == "OKAYNAME" && user.pw == "PASSWORD"
+      })
     )
+    flist.onComplete(list => list.foreach(b => {
+      assert(!b.isEmpty)
+    }
+    ))
+
+    Await.ready(flist, 10 seconds)
+    val list = flist.value.get.get
+    list foreach (b => println(b))
+
   }
+
   //  it must "saved user has correct values" in {
   //    val found = m.find(new UserAccount("name", "password")) map {
   //      case Some(UserAccount(un, pw, id)) => UserAccount(un, pw, id)
