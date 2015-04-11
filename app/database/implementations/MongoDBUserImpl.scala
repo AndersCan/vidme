@@ -1,14 +1,13 @@
-package database
+package database.implementations
 
+import database.UserStorage
 import models.UserAccount
 import play.api.libs.json.{JsValue, Json}
 import play.modules.reactivemongo.json.collection.JSONCollection
 import reactivemongo.api.{Cursor, MongoDriver}
-import reactivemongo.bson.{BSONDocument, BSONObjectID}
 import reactivemongo.core.commands.LastError
 
 import scala.concurrent.Future
-import scala.util.{Success, Failure}
 
 
 // TODO - Create explisit Execution context
@@ -18,7 +17,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 /**
  * Created by anders on 09/04/15.
  */
-class MongoDBImpl(val dbName: String, val colName: String) extends DataStorage {
+class MongoDBUserImpl(val dbName: String, val colName: String) extends UserStorage {
   val driver = new MongoDriver()
   val connection = driver.connection(List("localhost:27017"))
 

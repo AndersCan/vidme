@@ -1,7 +1,7 @@
 package models
 
-import play.api.libs.json.{JsObject, Json}
-
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsObject, JsPath, Json, Reads}
 
 /**
  * Created by anders on 09/04/15.
@@ -15,6 +15,11 @@ object UserAccount {
       "pw" -> ua.pw
     )
   }
+
+  implicit val userAccountRead: Reads[UserAccount] = (
+    (JsPath \ "name").read[String] and
+      (JsPath \ "pw").read[String]
+    )(UserAccount.apply _)
 
   //  def apply(name: String, pw: String): UserAccount = {
   //    new UserAccount(name, pw)

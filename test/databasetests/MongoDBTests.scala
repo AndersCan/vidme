@@ -4,7 +4,7 @@ package databasetests
  * Created by anders on 09/04/15.
  */
 
-import database.MongoDBImpl
+import database.implementations.MongoDBUserImpl
 import models.UserAccount
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FlatSpec, Matchers}
@@ -14,7 +14,7 @@ import scala.concurrent.Future
 import scala.language.postfixOps
 
 class MongoDBTests extends FlatSpec with Matchers with ScalaFutures {
-  val m: MongoDBImpl = new MongoDBImpl("TEST", "TEST")
+  val m: MongoDBUserImpl = new MongoDBUserImpl("TEST", "TEST")
   val un: String = "USERNAME"
   val pw: String = "PASSWORD"
   val defaultUser = UserAccount(un, pw)

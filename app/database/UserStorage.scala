@@ -7,7 +7,7 @@ import scala.concurrent.Future
 /**
  * Created by anders on 09/04/15.
  */
-trait DataStorage {
+trait UserStorage {
   /**
    * Finds a user in the database
    * @param user user to find

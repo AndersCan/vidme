@@ -1,37 +1,39 @@
 package controllers
 
-import database.MongoDBImpl
+import database.implementations.MongoDBUserImpl
 import models.UserAccount
 import play.api.libs.json.JsError
 import play.api.mvc.{BodyParsers, Action, Controller}
 import play.api.libs.json._
-import play.api.libs.functional.syntax._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.{Failure, Success}
 
 /**
  * Created by anders on 11/04/15.
  */
 object SecurityController extends Controller {
 
-  val m = new MongoDBImpl("TEST", "TEST")
+  val m = new MongoDBUserImpl("TEST", "TEST")
 
-  implicit val userAccountRead: Reads[UserAccount] = (
-    (JsPath \ "name").read[String] and
-      (JsPath \ "pw").read[String]
-    )(UserAccount.apply _)
+
+  /**
+   * Attempts to login with the given values. If successful adds a session to the user.
+   * @return
+   */
+
+  import UserAccount.userAccountRead
 
   def login = Action.async(BodyParsers.parse.json) { request =>
     val loginResult = request.body.validate[UserAccount]
     loginResult.fold(
       errors => {
-        Future(BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toFlatJson(errors))))
+        Future(BadRequest(Json.obj("status" -> "BAD JSON", "message" -> JsError.toFlatJson(errors))))
       },
       user => {
         m.find(user).map { users =>
-          if (users.nonEmpty) Ok("Found user")
-          else Ok("No User Found")
+          if (users.nonEmpty) Redirect(routes.HomeController.index()).withSession("user" -> user.name)
+          else Ok(Json.obj("status" -> "invalid", "msg" -> "user not found"))
         }
       }
     )
