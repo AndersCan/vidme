@@ -64,7 +64,6 @@ class MongoDBImpl(val dbName: String, val colName: String) extends DataStorage {
    */
   override def save(user: UserAccount): Future[LastError] = {
     val json = Json.obj(
-      //      "_id" -> BSONObjectID.generate.stringify,
       "name" -> user.name,
       "pw" -> user.pw
     )
