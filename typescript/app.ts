@@ -1,4 +1,4 @@
-/// <reference path="./reference.ts />
+/// <reference path="./reference.ts" />
 
 var app = angular.module('vidme', ['controllers', 'ngRoute']);
 

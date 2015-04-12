@@ -45,5 +45,5 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask("default", ["ts:dev", "uglify:my_target", "htmlmin:dist", "watch"]);
-    //grunt.registerTask("uglify", []);
+    //grunt.registerTask("default", ["ts:dev"]);
 };

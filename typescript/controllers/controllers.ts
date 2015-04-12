@@ -1,3 +1,3 @@
-/// <reference path="./reference.ts />
+/// <reference path="../reference.ts"/>
 
 angular.module('controllers',[]).controller(Controllers);
