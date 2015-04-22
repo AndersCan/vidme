@@ -1,6 +1,6 @@
 /// <reference path="./reference.ts" />
 
-var app = angular.module('vidme', ['controllers', 'ngRoute', 'ngCookies', 'services']);
+var app = angular.module('vidme', ['controllers', 'services', 'ngRoute', 'ngCookies']);
 
 app.config(function ($routeProvider:ng.route.IRouteProvider) {
     $routeProvider.when('/login', {

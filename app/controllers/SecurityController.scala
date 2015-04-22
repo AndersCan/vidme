@@ -12,6 +12,7 @@ import scala.concurrent.Future
 /**
  * Created by anders on 11/04/15.
  */
+// object is a Singleton class in Scala
 object SecurityController extends Controller {
 
   val m = new MongoDBUserImpl("TEST", "TEST")
@@ -21,6 +22,7 @@ object SecurityController extends Controller {
    * Attempts to login with the given values. If successful adds a session to the user.
    * @return
    */
+  // Implicit import to read UserAccount from JSON
 
   import UserAccount.userAccountRead
 
@@ -31,9 +33,8 @@ object SecurityController extends Controller {
         Future(BadRequest(Json.obj("status" -> "error", "msg" -> JsError.toFlatJson(errors))))
       },
       user => {
-        println(s"Find this shit: $user")
         m.find(user).map { users =>
-          println(s"Found this shit: $users")
+          // TODO WithSession is currently not used
           if (users.nonEmpty) Ok(Json.obj("status" -> "ok", "msg" -> "user found")).withSession("user" -> user.name)
           else Ok(Json.obj("status" -> "notfound", "msg" -> "Sorry, that user does not exist"))
         }

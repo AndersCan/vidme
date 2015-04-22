@@ -1,7 +1,12 @@
+interface IMainCtrl {
+    secureCookie: SecureCookie;
+    getWelcome:() => string;
+}
+
+
 module Controllers {
-    export class MainCtrl {
+    export class MainCtrl implements IMainCtrl {
         secureCookie:SecureCookie;
-        message = "Welcome Soldier!";
 
         getWelcome() {
             if (this.secureCookie.isLoggedIn()) {
