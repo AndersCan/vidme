@@ -1,5 +1,8 @@
 package controllers
 
+import javax.inject.Inject
+
+import database.UserStorage
 import database.implementations.MongoDBUserImpl
 import models.UserAccount
 import play.api.libs.json.JsError
@@ -13,10 +16,9 @@ import scala.concurrent.Future
  * Created by anders on 11/04/15.
  */
 // object is a Singleton class in Scala
-object SecurityController extends Controller {
+class SecurityController @Inject()(m: UserStorage) extends Controller {
 
-  val m = new MongoDBUserImpl("TEST", "TEST")
-
+  //  val m = new MongoDBUserImpl()
 
   /**
    * Attempts to login with the given values. If successful adds a session to the user.

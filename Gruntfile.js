@@ -1,14 +1,16 @@
 module.exports = function (grunt) {
 
     //load the tast
-    // npm install grunt-ts
+    // npm install grunt-ts --save-dev
     grunt.loadNpmTasks("grunt-ts");
     //load uglif
     // npm install grunt-contrib-uglify --save-dev
     grunt.loadNpmTasks('grunt-contrib-uglify');
     // watcher
+    // npm install grunt-contrib-watch --save-dev
     grunt.loadNpmTasks('grunt-contrib-watch');
     // html mini
+    // npm install grunt-contrib-htmlmin --save-dev
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     // Configure grunt here
     grunt.initConfig({
@@ -42,7 +44,7 @@ module.exports = function (grunt) {
         },
         watch: {
             files: ['typescript/**/*'],
-            tasks: ['uglify:my_target', 'htmlmin:dist','ts:dev']
+            tasks: ['uglify:my_target', 'htmlmin:dist', 'ts:dev']
         }
     });
 

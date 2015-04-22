@@ -1,5 +1,7 @@
 package database.implementations
 
+import javax.inject.Singleton
+
 import database.UserStorage
 import models.UserAccount
 import play.api.libs.json.{JsValue, Json}
@@ -17,7 +19,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
 /**
  * Created by anders on 09/04/15.
  */
-class MongoDBUserImpl(val dbName: String, val colName: String) extends UserStorage {
+@Singleton
+class MongoDBUserImpl() extends UserStorage {
+  val dbName = "TEST"
+  val colName = "TEST"
+
   val driver = new MongoDriver()
   val connection = driver.connection(List("localhost:27017"))
 
@@ -61,15 +67,14 @@ class MongoDBUserImpl(val dbName: String, val colName: String) extends UserStora
    * @param user
    * @return lastError
    */
-  override def save(user: UserAccount): Future[LastError] = {
+  override def save(user: UserAccount): Future[Boolean] = {
     val json = Json.obj(
       "name" -> user.name,
       "pw" -> user.pw
     )
 
-    collection.insert(json).map(lastError => {
-      lastError
-    })
+    val futureUpdate = collection.insert(json)
+    getBoolean(futureUpdate)
   }
 
   /**
@@ -78,26 +83,32 @@ class MongoDBUserImpl(val dbName: String, val colName: String) extends UserStora
    * @param updatedUser updated users
    * @return lastError
    */
-  override def update(oldUser: UserAccount, updatedUser: UserAccount): Future[LastError] = {
+  override def update(oldUser: UserAccount, updatedUser: UserAccount): Future[Boolean] = {
     val selector = UserAccount.getJson(oldUser)
 
     val modifier = Json.obj(
       "$set" -> UserAccount.getJson(updatedUser)
     )
-    println(selector)
-    println(modifier)
     // get a future update
     val futureUpdate = collection.update(selector, modifier)
-    futureUpdate
+    getBoolean(futureUpdate)
   }
 
   /**
    * Deletes the user details from the database
    * @param user UserAccount of user to delete
+   * @param count Optional How many users to delete. Default is 1
    * @return Future[true] if command was executed without errors.
    */
-  override def delete(user: UserAccount, count: Int = 1): Future[LastError] = {
+  override def delete(user: UserAccount, count: Int): Future[Boolean] = {
     val futureRemove = collection.remove(Json.obj("name" -> user.name, "pw" -> user.pw))
-    futureRemove
+    getBoolean(futureRemove)
+  }
+
+  def getBoolean(le: Future[LastError]): Future[Boolean] = {
+    le.map {
+      case lastError if lastError.ok => true
+      case _ => false
+    }
   }
 }

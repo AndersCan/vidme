@@ -5,8 +5,11 @@ import models.UserAccount
 import scala.concurrent.Future
 
 /**
- * Created by anders on 09/04/15.
+ * UserStorage is used to save UserAccounts to a database.
+ *
+ * Returned Boolean values represent if the command was successfully run on the database, not if they changed anything.
  */
+
 trait UserStorage {
   /**
    * Finds a user in the database
@@ -20,7 +23,7 @@ trait UserStorage {
    * @param user
    * @return
    */
-  def save(user: UserAccount): Future[Any]
+  def save(user: UserAccount): Future[Boolean]
 
   /**
    * Updates the given user with new details to the database
@@ -28,7 +31,7 @@ trait UserStorage {
    * @param updatedUser updated users
    * @return
    */
-  def update(oldUser: UserAccount, updatedUser: UserAccount): Future[Any]
+  def update(oldUser: UserAccount, updatedUser: UserAccount): Future[Boolean]
 
   /**
    * Deletes the user details from the database
@@ -36,5 +39,5 @@ trait UserStorage {
    * @param count how many to delete
    * @return Boolean if command was successful, not if delete was performed
    */
-  def delete(user: UserAccount, count: Int): Future[Any]
+  def delete(user: UserAccount, count: Int = 1): Future[Boolean]
 }

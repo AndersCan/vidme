@@ -13,8 +13,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.language.postfixOps
 
-class MongoDBTests extends FlatSpec with Matchers with ScalaFutures {
-  val m: MongoDBUserImpl = new MongoDBUserImpl("TEST", "TEST")
+
+class MongoDBTests() extends FlatSpec with Matchers with ScalaFutures {
+  val m: MongoDBUserImpl = new MongoDBUserImpl()
+
   val un: String = "USERNAME"
   val pw: String = "PASSWORD"
   val defaultUser = UserAccount(un, pw)
@@ -51,7 +53,7 @@ class MongoDBTests extends FlatSpec with Matchers with ScalaFutures {
     val tobeDeleted = UserAccount("deleteName", "deletePassword")
     whenReady(m.save(tobeDeleted))(res => {
       whenReady(m.delete(tobeDeleted))(res => {
-        assert(res.ok)
+        assert(res)
       })
     })
   }
@@ -64,8 +66,7 @@ class MongoDBTests extends FlatSpec with Matchers with ScalaFutures {
     val update = UserAccount("newname", "newpassword")
     val futUpdate = m.update(defaultUser, update)
 
-    whenReady(futUpdate)(lastError => {
-      assert(lastError.ok)
+    whenReady(futUpdate)(res => {
       val find = m.find(update)
       whenReady(find)(users => {
         assert(users.nonEmpty)
@@ -75,4 +76,5 @@ class MongoDBTests extends FlatSpec with Matchers with ScalaFutures {
       })
     })
   }
+
 }
