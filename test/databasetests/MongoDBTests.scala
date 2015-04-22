@@ -76,5 +76,13 @@ class MongoDBTests() extends FlatSpec with Matchers with ScalaFutures {
       })
     })
   }
+  it must "delete all users with newname and newpassword" in {
+    val tobeDeleted = UserAccount("newname", "newpassword")
+    whenReady(m.save(tobeDeleted))(res => {
+      whenReady(m.delete(tobeDeleted))(res => {
+        assert(res)
+      })
+    })
+  }
 
 }

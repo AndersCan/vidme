@@ -3,7 +3,6 @@ package controllers
 import javax.inject.Inject
 
 import database.UserStorage
-import database.implementations.MongoDBUserImpl
 import models.UserAccount
 import play.api.libs.json.JsError
 import play.api.mvc.{BodyParsers, Action, Controller}
@@ -15,8 +14,7 @@ import scala.concurrent.Future
 /**
  * Created by anders on 11/04/15.
  */
-// object is a Singleton class in Scala
-class SecurityController @Inject()(m: UserStorage) extends Controller {
+class SecurityController @Inject()(userStorage: UserStorage) extends Controller {
 
   //  val m = new MongoDBUserImpl()
 
@@ -35,7 +33,7 @@ class SecurityController @Inject()(m: UserStorage) extends Controller {
         Future(BadRequest(Json.obj("status" -> "error", "msg" -> JsError.toFlatJson(errors))))
       },
       user => {
-        m.find(user).map { users =>
+        userStorage.find(user).map { users =>
           // TODO WithSession is currently not used
           if (users.nonEmpty) Ok(Json.obj("status" -> "ok", "msg" -> "user found")).withSession("user" -> user.name)
           else Ok(Json.obj("status" -> "notfound", "msg" -> "Sorry, that user does not exist"))
@@ -51,10 +49,10 @@ class SecurityController @Inject()(m: UserStorage) extends Controller {
         Future(BadRequest(Json.obj("status" -> "error", "msg" -> JsError.toFlatJson(errors))))
       },
       user => {
-        m.find(user).map { users =>
+        userStorage.find(user).map { users =>
           // TODO WithSession is currently not used
           if (users.isEmpty) {
-            m.save(user)
+            userStorage.save(user)
             Ok(Json.obj("status" -> "ok", "msg" -> "user saved")).withSession("user" -> user.name)
           }
           else Ok(Json.obj("status" -> "error", "msg" -> "Sorry, that user already exist"))
@@ -62,21 +60,4 @@ class SecurityController @Inject()(m: UserStorage) extends Controller {
       }
     )
   }
-
-
-  //  def loginMap = Action.async(parse.json) { request =>
-  //    val loginResult = request.body.validate[UserAccount]
-  //    loginResult.map(user => {
-  //      case UserAccount => {
-  //        m.find(user) map { users =>
-  //          if (users.nonEmpty) {
-  //            Ok("Found user")
-  //          } else {
-  //            Ok("No user found")
-  //          }
-  //        }
-  //      }
-  //      case _ => Ok("Wrong JSON")
-  //    })
-  //  }
 }
