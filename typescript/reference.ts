@@ -6,6 +6,7 @@
 //grunt-start
 /// <reference path="partialviews/index.html.ts" />
 /// <reference path="partialviews/login.html.ts" />
+/// <reference path="partialviews/register.html.ts" />
 /// <reference path="controllers/MainCtrl.ts" />
 /// <reference path="controllers/SecurityCtrl.ts" />
 /// <reference path="routes/Routes.ts" />

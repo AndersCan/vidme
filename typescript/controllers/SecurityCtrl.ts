@@ -26,6 +26,11 @@ module Controllers {
             return this.$http.post('/security/login', {name: this.username, pw: this.password});
         }
 
+        postRegister() {
+            // POST request to save a user
+            return this.$http.post('/security/register', {name: this.username, pw: this.password});
+        }
+
         loginClick() {
             if (this.secureCookie.isLoggedIn()) {
                 // Already logged in!
@@ -60,6 +65,32 @@ module Controllers {
             }
         }
 
+        registerClick() {
+            var msg = this.postRegister();
+            msg.success((data) => {
+                // this callback will be called asynchronously
+                // when the response is available
+                // Check if Login was Success
+                var response = <IServerMessage>data;
+
+                if (response.status == "error") {
+                    // No user found
+                    console.log("User already exists");
+                } else if (response.status == "ok") {
+                    // user found
+                    console.log("Created user");
+                    this.$location.path("/login")
+                } else {
+                    // Unknown error...
+                }
+            }).
+                error((data, status, headers, config) => {
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                    console.log(data);
+                });
+        }
+
         getLoginMessage():string {
             if (this.secureCookie.isLoggedIn()) {
                 return "You are already logged in as: " + this.secureCookie.getName();
@@ -67,7 +98,6 @@ module Controllers {
                 return "Please login";
             }
         }
-
 
         message = "Welcome to Login!";
 

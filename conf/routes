@@ -3,8 +3,9 @@
 # ~~~~
 
 # Home page
-GET         /                      controllers.HomeController.index
-POST        /security/login        @controllers.SecurityController.login
+GET         /                         controllers.HomeController.index
+POST        /security/login           @controllers.SecurityController.login
+POST        /security/register        @controllers.SecurityController.register
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file          controllers.Assets.at(path="/public", file)
+GET         /assets/*file             controllers.Assets.at(path="/public", file)

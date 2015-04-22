@@ -1,5 +1,6 @@
 module.exports = function (grunt) {
 
+    // Install commands are located in the comments above their load.
     //load the tast
     // npm install grunt-ts --save-dev
     grunt.loadNpmTasks("grunt-ts");
@@ -20,7 +21,6 @@ module.exports = function (grunt) {
                 html: ["typescript/partialviews/**/*.html"],
                 reference: "typescript/reference.ts",  // If specified, generate this file that you can use for your reference management
                 out: 'public/javascripts/out.js'         // If specified, generate an out.js file which is the merged js file
-                //watch: 'typescript'
             }
         },
         uglify: {
@@ -49,5 +49,4 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask("default", ["ts:dev", "uglify:my_target", "htmlmin:dist", "watch"]);
-    //grunt.registerTask("default", ["ts:dev"]);
 };

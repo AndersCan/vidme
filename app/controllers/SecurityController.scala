@@ -44,6 +44,25 @@ class SecurityController @Inject()(m: UserStorage) extends Controller {
     )
   }
 
+  def register = Action.async(BodyParsers.parse.json) { implicit request =>
+    val loginResult = request.body.validate[UserAccount]
+    loginResult.fold(
+      errors => {
+        Future(BadRequest(Json.obj("status" -> "error", "msg" -> JsError.toFlatJson(errors))))
+      },
+      user => {
+        m.find(user).map { users =>
+          // TODO WithSession is currently not used
+          if (users.isEmpty) {
+            m.save(user)
+            Ok(Json.obj("status" -> "ok", "msg" -> "user saved")).withSession("user" -> user.name)
+          }
+          else Ok(Json.obj("status" -> "error", "msg" -> "Sorry, that user already exist"))
+        }
+      }
+    )
+  }
+
 
   //  def loginMap = Action.async(parse.json) { request =>
   //    val loginResult = request.body.validate[UserAccount]
