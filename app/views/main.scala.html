@@ -9,16 +9,12 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
         <script src="@routes.Assets.at("javascripts/hello.js")" type="application/javascript"></script>
     </head>
-    <body data-ng-app="vidme" data-ng-controller="MainController">
-        <div class="container">
-            <div class="jumbotron">
-                <h1> Header! </h1>
-                <h2> {{vm.message}} </h2>
-            </div>
-        </div>
+    <body data-ng-app="vidme">
+
         @content
     </body>
-    <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.js"></script>
     <script type="application/javascript" src="@routes.Assets.at("javascripts/angular-route.js")"></script>
+    <script type="application/javascript" src="@routes.Assets.at("javascripts/angular-cookies.js")"></script>
     <script type="application/javascript" src="@routes.Assets.at("javascripts/out.js")"></script>
 </html>

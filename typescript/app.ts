@@ -1,6 +1,6 @@
 /// <reference path="./reference.ts" />
 
-var app = angular.module('vidme', ['controllers', 'ngRoute']);
+var app = angular.module('vidme', ['controllers', 'ngRoute', 'ngCookies', 'services']);
 
 app.config(function ($routeProvider:ng.route.IRouteProvider) {
     $routeProvider.when('/login', {
@@ -9,6 +9,9 @@ app.config(function ($routeProvider:ng.route.IRouteProvider) {
     }).when('/:status', {
         controller: 'TodoCtrl',
         templateUrl: 'todomvc-index.html'
+    }).when('/', {
+        controller: 'MainCtrl',
+        templateUrl: 'assets/partialviews/index.html'
     }).otherwise({
         redirectTo: '/'
     });

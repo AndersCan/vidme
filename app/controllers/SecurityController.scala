@@ -28,12 +28,14 @@ object SecurityController extends Controller {
     val loginResult = request.body.validate[UserAccount]
     loginResult.fold(
       errors => {
-        Future(BadRequest(Json.obj("status" -> "BAD JSON", "message" -> JsError.toFlatJson(errors))))
+        Future(BadRequest(Json.obj("status" -> "error", "msg" -> JsError.toFlatJson(errors))))
       },
       user => {
+        println(s"Find this shit: $user")
         m.find(user).map { users =>
-          if (users.nonEmpty) Redirect(routes.HomeController.index()).withSession("user" -> user.name)
-          else Ok(Json.obj("status" -> "invalid", "msg" -> "user not found"))
+          println(s"Found this shit: $users")
+          if (users.nonEmpty) Ok(Json.obj("status" -> "ok", "msg" -> "user found")).withSession("user" -> user.name)
+          else Ok(Json.obj("status" -> "notfound", "msg" -> "Sorry, that user does not exist"))
         }
       }
     )

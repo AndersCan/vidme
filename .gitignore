@@ -13,3 +13,11 @@ dist
 /.project
 /RUNNING_PID
 /.settings
+
+.tscache/
+node_modules/
+public/javascripts/*
+public/partialviews/
+typescript/partialviews/**/*.html.ts
+typescript/**/*.js
+typescript/**/*.js.map

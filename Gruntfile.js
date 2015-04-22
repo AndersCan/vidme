@@ -1,8 +1,10 @@
 module.exports = function (grunt) {
 
     //load the tast
+    // npm install grunt-ts
     grunt.loadNpmTasks("grunt-ts");
     //load uglif
+    // npm install grunt-contrib-uglify --save-dev
     grunt.loadNpmTasks('grunt-contrib-uglify');
     // watcher
     grunt.loadNpmTasks('grunt-contrib-watch');
